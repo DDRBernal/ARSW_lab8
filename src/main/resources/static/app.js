@@ -42,6 +42,12 @@ var app = (function () {
             });
         });
 
+        //creando un objeto literal
+        stompClient.send("/topic/newpoint", {}, JSON.stringify({x:10,y:10}));
+
+        //enviando un objeto creado a partir de una clase
+        stompClient.send("/topic/newpoint", {}, JSON.stringify(pt));
+
     };
     
     
