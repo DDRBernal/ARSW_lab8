@@ -27,7 +27,6 @@ var app = (function () {
         };
     };
 
-
     var connectAndSubscribe = function () {
         console.info('Connecting to WS...');
         var socket = new SockJS('/stompendpoint');
@@ -38,7 +37,8 @@ var app = (function () {
             console.log('Connected: ' + frame);
             stompClient.subscribe('/topic/newpoint', function (eventbody) {
                 var points = JSON.parse(eventbody.body);
-                alert("X: "+points.x+" "+points.y);
+                alert("X: "+points.x+" y: "+points.y);
+                addPointToCanvas(points);
             });
         });
     };
@@ -49,19 +49,19 @@ var app = (function () {
 
         init: function () {
             var can = document.getElementById("canvas");
-            
+            var ctx = can.getContext("2d");
+            can.addEventListener("pointerdown", (event) => {
+                var point = getMousePosition(event);
+                stompClient.send("/topic/newpoint", {}, JSON.stringify(point));
+            })
             //websocket connection
             connectAndSubscribe();
-
-
         },
 
         publishPoint: function(px,py){
             var pt=new Point(px,py);
             console.info("publishing point at "+pt);
             addPointToCanvas(pt);
-            //publicar el evento
-            //enviando un objeto creado a partir de una clase
             stompClient.send("/topic/newpoint", {}, JSON.stringify(pt));
         },
 
