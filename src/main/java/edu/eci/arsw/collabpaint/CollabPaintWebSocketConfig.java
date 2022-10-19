@@ -34,6 +34,7 @@ public class CollabPaintWebSocketConfig extends AbstractWebSocketMessageBrokerCo
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config) {
+        config.setPathMatcher(new AntPathMatcher("."));
         config.enableSimpleBroker("/topic");
         config.setApplicationDestinationPrefixes("/app");        
     }
@@ -41,7 +42,6 @@ public class CollabPaintWebSocketConfig extends AbstractWebSocketMessageBrokerCo
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/stompendpoint").withSockJS();
-        
     }
     
 

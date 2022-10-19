@@ -48,22 +48,19 @@ var app = (function () {
     return {
 
         init: function (id) {
-			connectAndSubscribe(id);
             var can = document.getElementById("canvas");
-            var ctx = can.getContext("2d");
-            can.addEventListener("canvas", (event) => {
+            connectAndSubscribe(id);
+            can.addEventListener("can", (event) => {
                 var point = getMousePosition(event);
+                console.log(point);
                 stompClient.send("/topic/newpoint."+id, {}, JSON.stringify(point));
             })
-            //websocket connection
-            
         },
 
         publishPoint: function(px,py,id){
             var pt=new Point(px,py);
             console.info("publishing point at "+pt);
             addPointToCanvas(pt);
-			console.log(stompClient);
             stompClient.send("/topic/newpoint."+id, {}, JSON.stringify(pt));
         },
 
